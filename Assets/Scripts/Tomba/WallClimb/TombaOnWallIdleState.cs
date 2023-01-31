@@ -6,8 +6,8 @@ public class TombaOnWallIdleState : TombaOnWallBaseState {
     public TombaOnWallIdleState(Tomba tomba) : base(tomba) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.OnWallIdle;
+    public override TombaStateType Type() {
+        return TombaStateType.OnWallIdle;
     }
 
     public override void OnEnter(TombaState previousState) {

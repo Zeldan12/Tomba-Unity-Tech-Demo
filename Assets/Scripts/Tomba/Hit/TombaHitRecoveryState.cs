@@ -9,8 +9,8 @@ public class TombaHitRecoveryState : TombaState {
     public override void CameraBehaviour(CameraController cameraController) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.HitRecovery;
+    public override TombaStateType Type() {
+        return TombaStateType.HitRecovery;
     }
 
     public override void OnEnter(TombaState previousState) {

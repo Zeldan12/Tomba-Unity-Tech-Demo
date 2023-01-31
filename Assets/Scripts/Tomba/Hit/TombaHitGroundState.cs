@@ -27,8 +27,8 @@ public class TombaHitGroundState : TombaState {
         transform.rotation = Quaternion.Lerp(transform.rotation, new Quaternion(transform.rotation.x, 0, transform.rotation.z, transform.rotation.w), cameraController.Movespeed);
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.HitGround;
+    public override TombaStateType Type() {
+        return TombaStateType.HitGround;
     }
 
     public override void OnEnter(TombaState previousState) {

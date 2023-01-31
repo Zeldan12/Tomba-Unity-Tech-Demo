@@ -11,8 +11,6 @@ public class SoundManager : MonoBehaviour
 
     public static SoundManager Instance { get; private set; }
 
-    private string _basePath = "SFX/";
-    private AudioSource _audioSource;
 
     private Dictionary<SoundType,SoundTrack> _soundsTable;
 
@@ -39,8 +37,6 @@ public class SoundManager : MonoBehaviour
 
         Instance = this;
         _soundsTable = new Dictionary<SoundType, SoundTrack>();
-
-        _audioSource = GetComponent<AudioSource>();
 
         foreach (SoundTrack track in _soundTracks) {
             foreach (SoundObject obj in track.audio) {

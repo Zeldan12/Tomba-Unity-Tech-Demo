@@ -9,8 +9,8 @@ public class TombaTurnState : TombaGroundedBaseState {
     public TombaTurnState(Tomba tomba) : base(tomba) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.Turn;
+    public override TombaStateType Type() {
+        return TombaStateType.Turn;
     }
 
     public override void OnEnter(TombaState previousState) {

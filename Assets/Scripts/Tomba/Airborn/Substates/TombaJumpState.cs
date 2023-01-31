@@ -9,8 +9,8 @@ public class TombaJumpState : TombaAirbornBaseState {
 
     public TombaJumpState(Tomba tomba) : base(tomba) {
     }
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.Jump;
+    public override TombaStateType Type() {
+        return TombaStateType.Jump;
     }
 
     public override void OnEnter(TombaState previousState) {

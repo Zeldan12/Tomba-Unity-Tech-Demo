@@ -5032,6 +5032,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3814361877560847183, guid: fb13405eb23964748826e2935532f095, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: a7ec294fd10ffc34badc401610190726, type: 3}
     - target: {fileID: 5007539447096945479, guid: fb13405eb23964748826e2935532f095, type: 3}
       propertyPath: m_Name
       value: Tomba

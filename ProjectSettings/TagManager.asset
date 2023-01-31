@@ -16,7 +16,7 @@ TagManager:
   - DamageEntity
   - Collectible
   - TriggerBody
-  - 
+  - Pushable
   - 
   - 
   - 

@@ -11,8 +11,8 @@ public class TombaOnLedgeState : TombaOnWallBaseState {
         base.CameraBehaviour(cameraController);
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.OnLedge;
+    public override TombaStateType Type() {
+        return TombaStateType.OnLedge;
     }
 
     public override void OnEnter(TombaState previousState) {

@@ -9,8 +9,8 @@ public class TombaIdleState : TombaGroundedBaseState
     public TombaIdleState(Tomba tomba) : base(tomba) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.Idle;
+    public override TombaStateType Type() {
+        return TombaStateType.Idle;
     }
 
     public override void OnEnter(TombaState previousState) {

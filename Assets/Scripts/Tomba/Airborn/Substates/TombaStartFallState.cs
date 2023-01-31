@@ -9,8 +9,8 @@ public class TombaStartFallState : TombaState {
     public override void CameraBehaviour(CameraController cameraController) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.StartFall;
+    public override TombaStateType Type() {
+        return TombaStateType.StartFall;
     }
 
     public override void OnEnter(TombaState previousState) {

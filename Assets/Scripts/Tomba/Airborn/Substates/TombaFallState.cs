@@ -6,8 +6,8 @@ public class TombaFallState : TombaAirbornBaseState {
     public TombaFallState(Tomba tomba) : base(tomba) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.Fall;
+    public override TombaStateType Type() {
+        return TombaStateType.Fall;
     }
 
     public override void OnEnter(TombaState previousState) {

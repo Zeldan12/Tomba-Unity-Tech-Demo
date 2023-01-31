@@ -13,7 +13,7 @@ public abstract class TombaState{
     public abstract void OnEnter(TombaState previousState);
     public abstract TombaStateType Update();
     public abstract void OnExit();
-    public abstract bool Is(TombaStateType stateType);
+    public abstract TombaStateType Type();
 
     public abstract void CameraBehaviour(CameraController cameraController);
 }

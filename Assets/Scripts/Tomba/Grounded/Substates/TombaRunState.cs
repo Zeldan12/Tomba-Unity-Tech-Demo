@@ -1,15 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
-public class TombaWalkState : TombaGroundedBaseState {
-
-    public TombaWalkState(Tomba tomba) : base(tomba) {
+public class TombaRunState : TombaGroundedBaseState {
+    public TombaRunState(Tomba tomba) : base(tomba) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.Walk;
+    public override TombaStateType Type() {
+        return TombaStateType.Run;
     }
 
     public override void OnEnter(TombaState previousState) {
@@ -25,7 +23,7 @@ public class TombaWalkState : TombaGroundedBaseState {
     public override TombaStateType Update() {
 
         if ((_tomba.HorizontalInput < 0 && _tomba.HorizontalSpeed > 0) || (_tomba.HorizontalInput > 0 && _tomba.HorizontalSpeed < 0)) {
-                _tomba.HorizontalSpeed = 0;
+                return TombaStateType.Turn;
         }
 
         //Conditions to accelerate
@@ -45,29 +43,26 @@ public class TombaWalkState : TombaGroundedBaseState {
 
         }
 
-        if (_tomba.HorizontalInput * _tomba.HorizontalSpeed > 0) {
-            _tomba.transform.rotation = Quaternion.Euler(_tomba.transform.rotation.x, (_tomba.HorizontalSpeed > 0) ? 0 : 180, _tomba.transform.rotation.z);
-        }
-
-
         _tomba.RigidBody.velocity = new Vector2(_tomba.HorizontalSpeed, _tomba.RigidBody.velocity.y);
 
         TombaStateType priorityState = base.Update();
 
         if (priorityState == TombaStateType.None) {
-            if (_tomba.HorizontalSpeed == 0) {
-                return TombaStateType.Idle;
+            if (_tomba.HorizontalInput != 0 && _tomba.CheckPush()) {
+                return TombaStateType.Push;
             }
             if (_tomba.DashInput) {
                 return TombaStateType.Dash;
             }
-            if (Mathf.Abs(_tomba.HorizontalSpeed) >= _tomba.MaxRunSpeed / 2) {
-                return TombaStateType.Run;
+
+            if (Mathf.Abs(_tomba.HorizontalSpeed) <= _tomba.MaxRunSpeed / 2) {
+                return TombaStateType.Walk;
             }
             
         }
 
+
+
         return priorityState;
     }
-
 }

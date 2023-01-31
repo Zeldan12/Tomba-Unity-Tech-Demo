@@ -6,8 +6,8 @@ public class TombaDashState : TombaGroundedBaseState {
     public TombaDashState(Tomba tomba) : base(tomba) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.Dash;
+    public override TombaStateType Type() {
+        return TombaStateType.Dash;
     }
 
     public override void OnEnter(TombaState previousState) {
@@ -55,6 +55,9 @@ public class TombaDashState : TombaGroundedBaseState {
         if (priorityState != TombaStateType.None) {
             _tomba.IsDashing = true;
             return priorityState;
+        }
+        if (_tomba.HorizontalInput != 0 && _tomba.CheckPush()) {
+            return TombaStateType.Push;
         }
         if (_tomba.HorizontalSpeed == 0) {
             _tomba.IsDashing = false;

@@ -9,9 +9,6 @@ public class Tomba : MonoBehaviour {
         NotPressed
     }
 
-    [SerializeReference]
-    private TombaStateType _startingState;
-
     private TombaState _currentState;
 
     [SerializeField]
@@ -38,6 +35,10 @@ public class Tomba : MonoBehaviour {
     private float _horizontalSpeed = 0;
     [SerializeField]
     private float _maxRunSpeed = 12, _acceleration = 20, _decceleration = 20, _turnDecceleration = 30;
+    [SerializeField]
+    private LayerMask _pushMask;
+    [SerializeField]
+    private float _pushForce = 5;
     private Coroutine _walkSoundCoroutine;
     #endregion
 
@@ -89,6 +90,7 @@ public class Tomba : MonoBehaviour {
     public float Acceleration { get => _acceleration; }
     public float Decceleration { get => _decceleration; }
     public float TurnDecceleration { get => _turnDecceleration; }
+    public float PushForce { get => _pushForce; }
     #endregion
 
         #region Jump
@@ -132,8 +134,9 @@ public class Tomba : MonoBehaviour {
                 #endregion
 
         public bool Grounded { get; private set; }
-        public bool OnWall { get; private set; }
+        /*public bool OnWall { get; private set; }
         public bool OnLedge { get; private set; }
+        public GameObject PushObject { get; private set; }*/
         public bool AnimationEvent { get; set; }
         public TombaState CurrentState { get => _currentState; }
     #endregion
@@ -166,7 +169,7 @@ public class Tomba : MonoBehaviour {
             _dashParticleSystem = GetComponent<ParticleSystem>();
             _dashParticleSystem.Stop();
 
-            _currentState = _stateFactory.GetState(_startingState);
+            _currentState = _stateFactory.GetState(TombaStateType.Fall);
             _currentState.OnEnter(null);
     }
 
@@ -186,8 +189,6 @@ public class Tomba : MonoBehaviour {
         }
 
         Grounded = Physics2D.OverlapCircle(_groundedPosition.position, _groundedRadios, _groundMask) != null;
-        OnWall = Physics2D.OverlapCircle(_wallSensorPosition.position, _wallSensorRadios, _wallMask) != null;
-        OnLedge = Physics2D.OverlapCircle(_ledgeSensorPosition.position, _ledgeSensorRadious, _wallMask) == null && OnWall;
 
         TombaStateType newState = _currentState.Update();
         if (_hit) {
@@ -214,6 +215,7 @@ public class Tomba : MonoBehaviour {
         _animatorController.SetFloat("HorizontalSpeed", Mathf.Abs(_horizontalSpeed));
     }
 
+    #region Health
     public void TakeDamage(int ammount, int direction) {
         _health -= ammount;
         if (_health < 0) {
@@ -254,6 +256,7 @@ public class Tomba : MonoBehaviour {
         _sprite.enabled = true;
         _invunerabilityTimer = 0;
     }
+    #endregion
 
     public void TombaAnimationEvent() {
         AnimationEvent = true;
@@ -269,6 +272,7 @@ public class Tomba : MonoBehaviour {
         UIManager.Instance.UpdateScore(_score);
     }
 
+    #region WalkSound
     public void StartWalkSound() {
         _walkSoundCoroutine = StartCoroutine(WalkSound());
     }
@@ -286,5 +290,21 @@ public class Tomba : MonoBehaviour {
             yield return new WaitForSeconds(0.25f);
         }
     }
+    #endregion
 
+    #region Sensors
+
+    public bool CheckWall() {
+        return Physics2D.OverlapCircle(_wallSensorPosition.position, _wallSensorRadios, _wallMask) != null;
+    }
+
+    public bool CheckLedge() {
+        return Physics2D.OverlapCircle(_ledgeSensorPosition.position, _ledgeSensorRadious, _wallMask) == null;
+    }
+
+    public bool CheckPush() {
+        return Physics2D.OverlapCircle(_wallSensorPosition.position, _wallSensorRadios, _pushMask) != null;
+    }
+
+    #endregion
 }

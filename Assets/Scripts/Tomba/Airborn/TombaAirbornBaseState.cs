@@ -6,12 +6,12 @@ public class TombaAirbornBaseState : TombaState {
 
     protected Vector3 _lastPosition;
     private float _acceleration, _maxRunSpeed, _decceleration;
-    
+
     public TombaAirbornBaseState(Tomba tomba) : base(tomba) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return false;
+    public override TombaStateType Type() {
+        return TombaStateType.AirbornBase;
     }
 
     public override void OnEnter(TombaState previousState) {
@@ -61,7 +61,7 @@ public class TombaAirbornBaseState : TombaState {
             _tomba.IsDashing = false;
             return TombaGroundedBaseState.FindBestGroundedState(_tomba);
         }
-        if (_tomba.OnWall) {
+        if (_tomba.CheckWall()) {
             _tomba.IsDashing = false;
             return TombaOnWallBaseState.FindBestOnWallState(_tomba);
         }

@@ -14,8 +14,8 @@ public class TombaOnWallBaseState : TombaState {
     public TombaOnWallBaseState(Tomba tomba) : base(tomba) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return false;
+    public override TombaStateType Type() {
+        return TombaStateType.OnWallBase;
     }
 
     public override void OnEnter(TombaState previousState) {
@@ -35,10 +35,11 @@ public class TombaOnWallBaseState : TombaState {
 
     public override TombaStateType Update() {
         _tomba.RigidBody.velocity = new Vector2(_direction * 10, _tomba.RigidBody.velocity.y);
-        if (_tomba.OnLedge) {
+        if (_tomba.CheckLedge() && _tomba.CheckWall()) {
             return TombaStateType.OnLedge;
         }
-        if (!_tomba.OnWall) {
+        if (!_tomba.CheckWall()) {
+
             return TombaStateType.Fall;
         }
         if (_tomba.JumpInput == Tomba.JumpInputType.JustPressed) {
@@ -50,7 +51,7 @@ public class TombaOnWallBaseState : TombaState {
     }
 
     static public TombaStateType FindBestOnWallState(Tomba tomba) {
-        if (tomba.OnLedge) {
+        if (tomba.CheckLedge() && tomba.CheckWall()) {
             return TombaStateType.OnLedge;
         }
         if (tomba.VerticalInput == 0) {

@@ -5,8 +5,8 @@ public class TombaHitDieState : TombaState {
     public override void CameraBehaviour(CameraController cameraController) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return stateType == TombaStateType.HitDie;
+    public override TombaStateType Type() {
+        return TombaStateType.HitDie;
     }
 
     public override void OnEnter(TombaState previousState) {

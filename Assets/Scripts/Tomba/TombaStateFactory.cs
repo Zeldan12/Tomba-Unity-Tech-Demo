@@ -9,18 +9,22 @@ public enum TombaStateType {
     Run,
     Dash,
     Turn,
+    GroundedBase,
     Jump,
     Fall,
+    AirbornBase,
     OnWallDown,
     OnWallUp,
     OnWallIdle,
     OnLedge,
+    OnWallBase,
     EdgeClimb,
     HitAir,
     HitDie,
     HitGround,
     HitRecovery,
     StartFall,
+    Push,
     None
 }
 
@@ -56,12 +60,12 @@ public class TombaStateFactory
     private TombaState CreateSpecific(Type type, TombaStateType stateType) {
         TombaState stateInstance = (TombaState)Activator.CreateInstance(type, args:_context); ;
 
-        return stateInstance.Is(stateType) ? stateInstance : null;
+        return stateInstance.Type() == stateType ? stateInstance : null;
     }
 
     public TombaState GetState(TombaStateType stateType) {
         foreach (var item in _states) {
-            if (item.Is(stateType)) return item;
+            if (item.Type() == stateType) return item;
         }
         throw new Exception("[TombaStateFactory]: State '"+ stateType.ToString() +"' Not Found");
     }

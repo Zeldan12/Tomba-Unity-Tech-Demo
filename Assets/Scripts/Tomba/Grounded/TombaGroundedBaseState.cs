@@ -6,8 +6,8 @@ public class TombaGroundedBaseState : TombaState {
     public TombaGroundedBaseState(Tomba tomba) : base(tomba) {
     }
 
-    public override bool Is(TombaStateType stateType) {
-        return false;
+    public override TombaStateType Type() {
+        return TombaStateType.GroundedBase;
     }
 
     public override void OnEnter(TombaState previousState) {
