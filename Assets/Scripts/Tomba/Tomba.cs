@@ -3,10 +3,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Tomba : MonoBehaviour {
-    public enum JumpInputType {
+    public enum InputType {
+        NotPressed,
         JustPressed,
-        Held,
-        NotPressed
+        Held
+        
     }
 
     private TombaState _currentState;
@@ -81,6 +82,17 @@ public class Tomba : MonoBehaviour {
     private Collider2D _ledgeAdjuster;
     #endregion
 
+    #region Attack
+    [Header("Attack")]
+    [SerializeField]
+    private GameObject _weapon;
+    [SerializeField]
+    private float _maxChargeTimer = 5;
+    [SerializeField]
+    private Transform _rotationPivot;
+
+    #endregion
+
     #region Properties
 
     #region Horizontal Movement
@@ -93,52 +105,53 @@ public class Tomba : MonoBehaviour {
     public float PushForce { get => _pushForce; }
     #endregion
 
-        #region Jump
-        public float JumpSpeed {get => _jumpSpeed; }
-        public float MaxJTimer { get => _maxJTimer; }
-        #endregion
+    #region Jump
+    public float JumpSpeed { get => _jumpSpeed; }
+    public float MaxJTimer { get => _maxJTimer; }
+    #endregion
 
 
-        #region Dash Movement
-        public float MaxDashSpeed { get => _maxDashSpeed; }
-        public float DashAcceleration { get => _dashAcceleration; }
-        public float DashDecceleration { get => _dashDecceleration; }
-        public float DashTurnDecceleration { get => _dashTurnDecceleration; }
-        public float DashJumpSpeed { get => _dashJumpSpeed; }
-        public float DashMaxJTimer { get => _dashMaxJTimer; }
-        public bool IsDashing { get => _isDashing; set => _isDashing = value; }
-        public ParticleSystem DashParticleSystem { get => _dashParticleSystem; }
-        #endregion
+    #region Dash Movement
+    public float MaxDashSpeed { get => _maxDashSpeed; }
+    public float DashAcceleration { get => _dashAcceleration; }
+    public float DashDecceleration { get => _dashDecceleration; }
+    public float DashTurnDecceleration { get => _dashTurnDecceleration; }
+    public float DashJumpSpeed { get => _dashJumpSpeed; }
+    public float DashMaxJTimer { get => _dashMaxJTimer; }
+    public bool IsDashing { get => _isDashing; set => _isDashing = value; }
+    public ParticleSystem DashParticleSystem { get => _dashParticleSystem; }
+    #endregion
 
-        #region WallClimb
-        public float ClimbUpMoveSpeed { get => _climbUpMoveSpeed; }
-        public float ClimbDownMoveSpeed { get => _climbDownMoveSpeed; }
-        public float WallJumpOffset { get => _wallJumpOffset; }
-        public float MovementDegree { get => _movementDegree; }
-        public float MaxRotationTimer { get => _maxRotationTimer; }
-        public float RotationFrequency { get => _rotationFrequency; }
-        public Collider2D LedgeAdjuster { get => _ledgeAdjuster; }
-        #endregion
+    #region WallClimb
+    public float ClimbUpMoveSpeed { get => _climbUpMoveSpeed; }
+    public float ClimbDownMoveSpeed { get => _climbDownMoveSpeed; }
+    public float WallJumpOffset { get => _wallJumpOffset; }
+    public float MovementDegree { get => _movementDegree; }
+    public float MaxRotationTimer { get => _maxRotationTimer; }
+    public float RotationFrequency { get => _rotationFrequency; }
+    public Collider2D LedgeAdjuster { get => _ledgeAdjuster; }
+    #endregion
 
     public Vector2 HitKnockback { get => _hitKnockback; }
-        public float HitDirection { get => _hitDirection; }
-        public float HitGroundMove { get => _hitGroundMove; }
-        public int Health { get => _health; }
-        public int MaxHealth { get => _maxHealth; }
+    public float HitDirection { get => _hitDirection; }
+    public float HitGroundMove { get => _hitGroundMove; }
+    public int Health { get => _health; }
+    public int MaxHealth { get => _maxHealth; }
     #region Inputs
     public float HorizontalInput { get; private set; }
-        public float VerticalInput { get; private set; }
-        public bool DashInput { get; private set; }
-        public JumpInputType JumpInput { get; private set; }
+    public float VerticalInput { get; private set; }
+    public bool DashInput { get; private set; }
+    public InputType JumpInput { get; private set; }
+    public InputType AttackInput { get; private set; }
 
-                #endregion
+    #endregion
 
-        public bool Grounded { get; private set; }
-        /*public bool OnWall { get; private set; }
-        public bool OnLedge { get; private set; }
-        public GameObject PushObject { get; private set; }*/
-        public bool AnimationEvent { get; set; }
-        public TombaState CurrentState { get => _currentState; }
+    public bool Grounded { get; private set; }
+    /*public bool OnWall { get; private set; }
+    public bool OnLedge { get; private set; }
+    public GameObject PushObject { get; private set; }*/
+    public bool AnimationEvent { get; set; }
+    public TombaState CurrentState { get => _currentState; }
     #endregion
 
     #region Object Components
@@ -156,41 +169,51 @@ public class Tomba : MonoBehaviour {
     public Transform Body { get => _body; }
     #endregion
 
-    void Start()
-    {
-            _stateFactory = new TombaStateFactory(this);
-            UIManager.Instance.SetUp(this);
-            UIManager.Instance.UpdateScore(_score);
+    void Start() {
+        _stateFactory = new TombaStateFactory(this);
+        UIManager.Instance.SetUp(this);
+        UIManager.Instance.UpdateScore(_score);
 
-            _animatorController = GetComponent<Animator>();
-            _rigidBody = GetComponent<Rigidbody2D>();
-            _playerInput = GetComponent<PlayerInput>();
+        _animatorController = GetComponent<Animator>();
+        _rigidBody = GetComponent<Rigidbody2D>();
+        _playerInput = GetComponent<PlayerInput>();
 
-            _dashParticleSystem = GetComponent<ParticleSystem>();
-            _dashParticleSystem.Stop();
+        _dashParticleSystem = GetComponent<ParticleSystem>();
+        _dashParticleSystem.Stop();
 
-            _currentState = _stateFactory.GetState(TombaStateType.Fall);
-            _currentState.OnEnter(null);
+        _currentState = _stateFactory.GetState(TombaStateType.AirbornBase);
+        _currentState.OnEnter();
+
+        GameObject weapon = Instantiate(_weapon,_rotationPivot.position, Quaternion.identity);
+        weapon.GetComponent<Weapon>().SetUp(this);
     }
 
-    void Update()
-    {
+    void Update() {
         HorizontalInput = _playerInput.actions["HorizontalMove"].ReadValue<float>();
         VerticalInput = _playerInput.actions["VerticalMove"].ReadValue<float>();
         DashInput = _playerInput.actions["Dash"].ReadValue<float>() == 1;
-        
+
 
         if (_playerInput.actions["Jump"].WasPressedThisFrame()) {
-            JumpInput = JumpInputType.JustPressed;
-        }else if (_playerInput.actions["Jump"].IsPressed()) {
-            JumpInput = JumpInputType.Held;
+            JumpInput = InputType.JustPressed;
+        } else if (_playerInput.actions["Jump"].IsPressed()) {
+            JumpInput = InputType.Held;
         } else {
-            JumpInput = JumpInputType.NotPressed;
+            JumpInput = InputType.NotPressed;
+        }
+
+        if (_playerInput.actions["Attack"].WasPressedThisFrame()) {
+            AttackInput = InputType.JustPressed;
+        } else if (_playerInput.actions["Attack"].IsPressed()) {
+            AttackInput = InputType.Held;
+        } else {
+            AttackInput = InputType.NotPressed;
         }
 
         Grounded = Physics2D.OverlapCircle(_groundedPosition.position, _groundedRadios, _groundMask) != null;
+        _currentState.Update();
+        TombaStateType newState = _currentState.CheckStateChange();
 
-        TombaStateType newState = _currentState.Update();
         if (_hit) {
             _hit = false;
             SoundManager.Instance.PlaySound(SoundType.TombaHit, 1f);
@@ -206,10 +229,10 @@ public class Tomba : MonoBehaviour {
         }
 
         if (newState != TombaStateType.None) {
-            TombaState previousState = _currentState;
+            //TombaState previousState = _currentState;
             _currentState.OnExit();
             _currentState = _stateFactory.GetState(newState);
-            _currentState.OnEnter(previousState);
+            _currentState.OnEnter();
         }
 
         _animatorController.SetFloat("HorizontalSpeed", Mathf.Abs(_horizontalSpeed));
@@ -266,10 +289,14 @@ public class Tomba : MonoBehaviour {
         _score += score;
         if (_score > 999999) {
             _score = 999999;
-        }else if (_score < 0) {
+        } else if (_score < 0) {
             _score = 0;
         }
         UIManager.Instance.UpdateScore(_score);
+    }
+
+    public TombaState GetState(TombaStateType tombaStateType) {
+       return _stateFactory.GetState(tombaStateType);
     }
 
     #region WalkSound

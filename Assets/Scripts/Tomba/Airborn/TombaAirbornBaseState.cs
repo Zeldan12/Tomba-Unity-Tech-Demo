@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TombaAirbornBaseState : TombaState {
 
-    protected Vector3 _lastPosition;
+    private Vector3 _lastPosition;
     private float _acceleration, _maxRunSpeed, _decceleration;
+    private TombaState _subState;
 
     public TombaAirbornBaseState(Tomba tomba) : base(tomba) {
     }
@@ -14,8 +13,15 @@ public class TombaAirbornBaseState : TombaState {
         return TombaStateType.AirbornBase;
     }
 
-    public override void OnEnter(TombaState previousState) {
-        if (_tomba.IsDashing) {
+    public override void OnEnter() {
+        if (_tomba.JumpInput == Tomba.InputType.JustPressed) {
+            _subState = _tomba.GetState(TombaStateType.Jump);
+        } else {
+            _subState = _tomba.GetState(TombaStateType.Fall);
+        }
+
+        if (_tomba.DashInput) {
+            _tomba.IsDashing = true;
             _acceleration = _tomba.DashAcceleration;
             _maxRunSpeed = _tomba.MaxDashSpeed;
             _decceleration = _tomba.DashDecceleration;
@@ -26,15 +32,19 @@ public class TombaAirbornBaseState : TombaState {
             _decceleration = _tomba.Decceleration;
         }
 
+        _subState.OnEnter();
+
         _lastPosition = _tomba.transform.position;
     }
 
     public override void OnExit() {
+        _subState.OnExit();
         _tomba.DashParticleSystem.Stop();
+        _tomba.IsDashing = false;
     }
 
-    public override TombaStateType Update() {
-        
+    public override void Update() {
+
         //Conditions to accelerate
         if (((_tomba.HorizontalInput > 0 && _tomba.HorizontalSpeed >= 0) || (_tomba.HorizontalInput < 0 && _tomba.HorizontalSpeed <= 0))) {
             //Accelerate based on the _direction of the input
@@ -54,16 +64,27 @@ public class TombaAirbornBaseState : TombaState {
         if (_tomba.HorizontalInput != 0) {
             _tomba.transform.rotation = Quaternion.Euler(_tomba.transform.rotation.x, (_tomba.HorizontalInput == 1) ? 0 : 180, _tomba.transform.rotation.z);
         }
-        
+
         _tomba.RigidBody.velocity = new Vector2(_tomba.HorizontalSpeed, _tomba.RigidBody.velocity.y);
 
-        if (_tomba.Grounded && _tomba.RigidBody.velocity.y <= 0) {
-            _tomba.IsDashing = false;
-            return TombaGroundedBaseState.FindBestGroundedState(_tomba);
+        _subState.Update();
+
+        TombaStateType newState = _subState.CheckStateChange();
+
+        if (newState != TombaStateType.None) {
+            _subState.OnExit();
+            _subState = _tomba.GetState(newState);
+            _subState.OnEnter();
         }
-        if (_tomba.CheckWall()) {
-            _tomba.IsDashing = false;
-            return TombaOnWallBaseState.FindBestOnWallState(_tomba);
+    }
+
+    public override TombaStateType CheckStateChange() {
+        if (_tomba.Grounded && _tomba.RigidBody.velocity.y <= 0) {
+            return TombaStateType.GroundedBase;
+        }
+
+        if (_tomba.CheckWall() && !_tomba.Grounded) {
+            return TombaStateType.OnWallBase;
         }
 
         return TombaStateType.None;
@@ -88,4 +109,6 @@ public class TombaAirbornBaseState : TombaState {
         transform.position = new Vector3(transform.position.x + xMovement, yMovement, transform.position.z);
         transform.rotation = Quaternion.Lerp(transform.rotation, new Quaternion(transform.rotation.x, 0, transform.rotation.z, transform.rotation.w), cameraController.Movespeed);
     }
+
+
 }

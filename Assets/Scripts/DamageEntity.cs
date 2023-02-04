@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageEntity : MonoBehaviour
-{
+public class DamageEntity : MonoBehaviour {
     [SerializeField]
     private int _damage = 1;
     [SerializeField]

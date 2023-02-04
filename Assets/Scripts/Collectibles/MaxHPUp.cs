@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MaxHPUp : MonoBehaviour
-{
+public class MaxHPUp : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision) {
         Tomba tomba = collision.gameObject.GetComponentInParent<Tomba>();
         if (tomba != null) {

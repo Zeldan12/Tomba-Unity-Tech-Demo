@@ -133,6 +133,37 @@ CapsuleCollider2D:
   m_Offset: {x: 0.008951774, y: -0.017223258}
   m_Size: {x: 0.24129418, y: 0.3928661}
   m_Direction: 0
+--- !u!1 &4987445097904877499
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8720129459946847936}
+  m_Layer: 6
+  m_Name: WeaponPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8720129459946847936
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4987445097904877499}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5007539447096945499}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5007539447096945479
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,6 +203,7 @@ Transform:
   - {fileID: 602352710473092008}
   - {fileID: 4007576365775318032}
   - {fileID: 5883245174987916456}
+  - {fileID: 8720129459946847936}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -257,6 +289,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: bea2c6ee-7e7a-41f2-ba05-f3c816471f25
     m_ActionName: Grounded/Dash[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: da017163-bcda-4975-9cdb-e51d22bd698f
+    m_ActionName: Grounded/Attack
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Grounded
@@ -316,6 +352,8 @@ MonoBehaviour:
   _rotationFrequency: -5
   _body: {fileID: 6723365175768604687}
   _ledgeAdjuster: {fileID: 5958934742837910192}
+  _maxChargeTimer: 5
+  _rotationPivot: {fileID: 8720129459946847936}
   _sprite: {fileID: 3814361877560847183}
 --- !u!198 &368114990430668666
 ParticleSystem:

@@ -1,6 +1,5 @@
 
-public enum SoundType
-{
+public enum SoundType {
     Jump,
     WallLatch,
     TombaHit,

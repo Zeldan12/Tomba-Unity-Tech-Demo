@@ -1,18 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public class SoundManager : MonoBehaviour
-{
+public class SoundManager : MonoBehaviour {
 
     public static SoundManager Instance { get; private set; }
 
 
-    private Dictionary<SoundType,SoundTrack> _soundsTable;
+    private Dictionary<SoundType, SoundTrack> _soundsTable;
 
     [SerializeField]
     private SoundTrack[] _soundTracks;
@@ -48,21 +43,21 @@ public class SoundManager : MonoBehaviour
     }
 
     private void Start() {
-        PlaySound(SoundType.Music13,0.75f);
+        PlaySound(SoundType.Music13, 0.75f);
     }
     public void PlaySound(SoundType sound, float volume) {
         foreach (var entry in _soundsTable) {
-            if(entry.Key == sound) {
+            if (entry.Key == sound) {
                 AudioSource source = entry.Value.audioSource;
                 foreach (var item in entry.Value.audio) {
                     if (item.soundType == sound) {
                         source.clip = item.clip;
-                        source.volume = volume; 
+                        source.volume = volume;
                         source.Play();
                         break;
                     }
                 }
-                
+
             }
         }
     }

@@ -1,15 +1,9 @@
-using Mono.Cecil;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Windows;
 
-public class UIManager : MonoBehaviour
-{
+public class UIManager : MonoBehaviour {
 
     public static UIManager Instance { get; private set; }
 
@@ -25,9 +19,9 @@ public class UIManager : MonoBehaviour
     private int _healthUpdateBlinks;
     [SerializeField]
     private float _healthUpdateBlinkDelay = 0.1f;
-    
-  
-    private Dictionary<int,HPDivision> _divisions;
+
+
+    private Dictionary<int, HPDivision> _divisions;
     private int _maxHp;
     private int _currentHp;
     private Coroutine _healthUpdateCoroutine;
@@ -56,26 +50,26 @@ public class UIManager : MonoBehaviour
         for (int i = 1; i <= _maxHp; i++) {
             GameObject newDiv = Instantiate(_divisionPrefab, _divisionParent);
             HPDivision newScritp = newDiv.GetComponent<HPDivision>();
-            _divisions.Add(i,newScritp);
+            _divisions.Add(i, newScritp);
             newScritp.SetEnable(true);
 
             if (i <= _currentHp) {
-                newScritp.ChangeColor(newColor, divQuant,i);
+                newScritp.ChangeColor(newColor, divQuant, i);
             } else {
-                newScritp.ChangeColor(HPColor.Clear, divQuant,i);
+                newScritp.ChangeColor(HPColor.Clear, divQuant, i);
             }
-            
+
         }
     }
     public void UpdateScore(int score) {
         string newScore = "";
 
-        foreach (char digit in score.ToString("D"+6.ToString())) {
-            newScore += "<sprite name=\""+digit+"\">" ;
+        foreach (char digit in score.ToString("D" + 6.ToString())) {
+            newScore += "<sprite name=\"" + digit + "\">";
         }
 
         _scoreUI.text = newScore;
-        
+
     }
 
     public void UpdateHealth(int hp) {
@@ -93,21 +87,21 @@ public class UIManager : MonoBehaviour
     public void IncreaseMaxHealth() {
         int divQuant = 8;
         if (_maxHp == 8) {
-            
-             divQuant = 16;
+
+            divQuant = 16;
             for (int i = 1; i <= _divisions.Count; i++) {
-                _divisions[i].ChangeSize(divQuant,i);
+                _divisions[i].ChangeSize(divQuant, i);
             }
         }
         _maxHp++;
-        
+
         GameObject newDiv = Instantiate(_divisionPrefab, _divisionParent);
         HPDivision newScritp = newDiv.AddComponent<HPDivision>();
         _divisions[_maxHp] = newScritp;
 
         newScritp.SetEnable(true);
         newScritp.ChangeColor(HPColor.Clear, divQuant, _maxHp);
-        
+
     }
 
     private IEnumerator HPChange(int oldHP, int newHP, HPColor oldColor, HPColor newColor) {
@@ -133,7 +127,7 @@ public class UIManager : MonoBehaviour
                     }
                     _healthNumberUI.text = "<sprite name=\"" + oldHP + "\">";
                 }
-                
+
             }
             yield return new WaitForSeconds(_healthUpdateBlinkDelay);
         }
@@ -143,10 +137,10 @@ public class UIManager : MonoBehaviour
             } else {
                 _divisions[i].ChangeColor(newColor, divQuant, i);
             }
-            
+
         }
         _healthNumberUI.text = "<sprite name=\"" + newHP + "\">";
-        
+
     }
 
     private HPColor FindHPColor(int hp) {

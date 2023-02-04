@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TombaHitAirState : TombaState {
@@ -13,7 +11,7 @@ public class TombaHitAirState : TombaState {
         return TombaStateType.HitAir;
     }
 
-    public override void OnEnter(TombaState previousState) {
+    public override void OnEnter() {
         _tomba.AnimationEvent = false;
         _tomba.AnimatorController.Play("Hit-Air");
         _lastPosition = _tomba.transform.position;
@@ -24,14 +22,8 @@ public class TombaHitAirState : TombaState {
         _tomba.AnimationEvent = false;
     }
 
-    public override TombaStateType Update() {
-        if (_tomba.Grounded && _tomba.RigidBody.velocity.y < 0) {
-            return TombaStateType.HitGround;
-        }
-        if (!_tomba.AnimationEvent || _tomba.Health <= 0) {
-            return TombaStateType.None;
-        }
-        return TombaStateType.Fall;
+    public override void Update() {
+      
     }
     public override void CameraBehaviour(CameraController cameraController) {
         Transform player = _tomba.transform;
@@ -51,5 +43,15 @@ public class TombaHitAirState : TombaState {
         }
         transform.position = new Vector3(transform.position.x + xMovement, yMovement, transform.position.z);
         transform.rotation = Quaternion.Lerp(transform.rotation, new Quaternion(transform.rotation.x, 0, transform.rotation.z, transform.rotation.w), cameraController.Movespeed);
+    }
+
+    public override TombaStateType CheckStateChange() {
+        if (_tomba.Grounded && _tomba.RigidBody.velocity.y < 0) {
+            return TombaStateType.HitGround;
+        }
+        if (!_tomba.AnimationEvent || _tomba.Health <= 0) {
+            return TombaStateType.None;
+        }
+        return TombaStateType.AirbornBase;
     }
 }

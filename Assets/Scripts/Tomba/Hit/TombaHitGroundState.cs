@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TombaHitGroundState : TombaState {
@@ -31,10 +29,10 @@ public class TombaHitGroundState : TombaState {
         return TombaStateType.HitGround;
     }
 
-    public override void OnEnter(TombaState previousState) {
+    public override void OnEnter() {
         _lastPosition = _tomba.transform.position;
-        _tomba.AnimationEvent = false;
         _tomba.AnimatorController.Play("Hit-Ground");
+        _tomba.AnimationEvent = false;
     }
 
     public override void OnExit() {
@@ -42,8 +40,12 @@ public class TombaHitGroundState : TombaState {
         _tomba.RigidBody.velocity = new Vector2(0, _tomba.RigidBody.velocity.y);
     }
 
-    public override TombaStateType Update() {
+    public override void Update() {
         _tomba.RigidBody.velocity = new Vector2(_tomba.HitGroundMove * _tomba.HitDirection, _tomba.RigidBody.velocity.y);
+        
+    }
+
+    public override TombaStateType CheckStateChange() {
         if (!_tomba.AnimationEvent) {
             return TombaStateType.None;
         }
@@ -53,6 +55,6 @@ public class TombaHitGroundState : TombaState {
         if (_tomba.Grounded) {
             return TombaStateType.HitRecovery;
         }
-        return TombaStateType.Fall;
+        return TombaStateType.AirbornBase;
     }
 }

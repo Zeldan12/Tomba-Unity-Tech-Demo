@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class TombaOnWallIdleState : TombaOnWallBaseState {
+public class TombaOnWallIdleState : TombaState {
     public TombaOnWallIdleState(Tomba tomba) : base(tomba) {
     }
 
@@ -10,23 +9,21 @@ public class TombaOnWallIdleState : TombaOnWallBaseState {
         return TombaStateType.OnWallIdle;
     }
 
-    public override void OnEnter(TombaState previousState) {
+    public override void OnEnter() {
         _tomba.AnimatorController.Play("WallClimb-Idle");
-        base.OnEnter(previousState);
     }
 
     public override void OnExit() {
-        base.OnExit();
     }
 
-    public override TombaStateType Update() {
-        _tomba.RigidBody.velocity = Vector2.zero;
-        TombaStateType priorityState = base.Update();
+    public override void Update() {
+        _tomba.RigidBody.velocity = new Vector2(_tomba.RigidBody.velocity.x,0);
+    }
 
-        if (priorityState != TombaStateType.None) {
-            return priorityState;
+    public override TombaStateType CheckStateChange() {
+        if (_tomba.CheckLedge() && _tomba.CheckWall()) {
+            return TombaStateType.OnLedge;
         }
-
         if (_tomba.VerticalInput > 0) {
             return TombaStateType.OnWallUp;
         }
@@ -34,5 +31,8 @@ public class TombaOnWallIdleState : TombaOnWallBaseState {
             return TombaStateType.OnWallDown;
         }
         return TombaStateType.None;
+    }
+
+    public override void CameraBehaviour(CameraController cameraController) {
     }
 }

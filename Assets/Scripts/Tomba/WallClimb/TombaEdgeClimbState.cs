@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
 public class TombaEdgeClimbState : TombaState {
 
-    
+
     public TombaEdgeClimbState(Tomba tomba) : base(tomba) {
     }
 
@@ -28,11 +26,12 @@ public class TombaEdgeClimbState : TombaState {
         return TombaStateType.EdgeClimb;
     }
 
-    public override void OnEnter(TombaState previousState) {
+    public override void OnEnter() {
         _tomba.AnimationEvent = false;
         _tomba.RigidBody.gravityScale = 0;
+        _tomba.RigidBody.velocity = Vector2.zero;
         _tomba.AnimatorController.Play("EdgeClimb");
-        
+
     }
 
     public override void OnExit() {
@@ -41,13 +40,15 @@ public class TombaEdgeClimbState : TombaState {
         _tomba.AnimationEvent = false;
     }
 
-    public override TombaStateType Update() {
+    public override void Update() {
+    }
 
+    public override TombaStateType CheckStateChange() {
         if (_tomba.AnimationEvent) {
             if (_tomba.Grounded) {
-                return TombaGroundedBaseState.FindBestGroundedState(_tomba);
+                return TombaStateType.GroundedBase;
             }
-            return TombaStateType.Fall;
+            return TombaStateType.AirbornBase;
         }
         return TombaStateType.None;
     }

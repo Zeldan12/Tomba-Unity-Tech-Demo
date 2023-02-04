@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TombaJumpState : TombaAirbornBaseState {
+public class TombaJumpState : TombaState {
 
     private float _jumpSpeed;
     private float _jTimer;
@@ -13,12 +11,11 @@ public class TombaJumpState : TombaAirbornBaseState {
         return TombaStateType.Jump;
     }
 
-    public override void OnEnter(TombaState previousState) {
-        
+    public override void OnEnter() {
+
         _tomba.AnimatorController.Play("Jump-Rise");
         SoundManager.Instance.PlaySound(SoundType.Jump, 1f);
-        if (_tomba.DashInput) {
-            _tomba.IsDashing = true;
+        if (_tomba.IsDashing) {
             _jumpSpeed = _tomba.DashJumpSpeed;
             _jTimer = _tomba.DashMaxJTimer;
             _tomba.DashParticleSystem.Play();
@@ -26,28 +23,26 @@ public class TombaJumpState : TombaAirbornBaseState {
             _jumpSpeed = _tomba.JumpSpeed;
             _jTimer = _tomba.MaxJTimer;
         }
-        base.OnEnter(previousState);
+
         _tomba.RigidBody.velocity = new Vector2(_tomba.RigidBody.velocity.x, _jumpSpeed);
     }
 
     public override void OnExit() {
-        base.OnExit();
     }
 
-    public override TombaStateType Update() {
-
-
-        TombaStateType prioState = base.Update();
-
+    public override void Update() {
         _tomba.RigidBody.velocity = new Vector2(_tomba.RigidBody.velocity.x, _jumpSpeed);
-
         _jTimer -= Time.deltaTime;
+    }
 
-        if (prioState == TombaStateType.None) {
-            if (_tomba.JumpInput == Tomba.JumpInputType.NotPressed || _jTimer <= 0) {
-                return TombaStateType.Fall;
-            }
+    public override TombaStateType CheckStateChange() {
+        if (_tomba.JumpInput == Tomba.InputType.NotPressed || _jTimer <= 0) {
+            return TombaStateType.Fall;
         }
-        return prioState;
+
+        return TombaStateType.None;
+    }
+
+    public override void CameraBehaviour(CameraController cameraController) {
     }
 }

@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class TombaHitRecoveryState : TombaState {
     public TombaHitRecoveryState(Tomba tomba) : base(tomba) {
     }
@@ -13,7 +9,7 @@ public class TombaHitRecoveryState : TombaState {
         return TombaStateType.HitRecovery;
     }
 
-    public override void OnEnter(TombaState previousState) {
+    public override void OnEnter() {
         _tomba.AnimationEvent = false;
         _tomba.AnimatorController.Play("Hit-Recovery");
     }
@@ -22,9 +18,13 @@ public class TombaHitRecoveryState : TombaState {
         _tomba.AnimationEvent = false;
     }
 
-    public override TombaStateType Update() {
+    public override void Update() {
+
+    }
+
+    public override TombaStateType CheckStateChange() {
         if (_tomba.AnimationEvent) {
-            return TombaGroundedBaseState.FindBestGroundedState(_tomba);
+            return TombaStateType.GroundedBase;
         }
         return TombaStateType.None;
     }

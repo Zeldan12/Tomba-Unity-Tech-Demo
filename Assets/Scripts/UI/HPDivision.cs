@@ -1,12 +1,7 @@
-using System;
-using System.IO;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Windows;
 
-public class HPDivision : MonoBehaviour
-{
+public class HPDivision : MonoBehaviour {
 
     private HPColor _currentColor;
     private Image _image;
@@ -18,7 +13,7 @@ public class HPDivision : MonoBehaviour
 
     public void ChangeColor(HPColor newColor, int division, int number) {
         if (newColor != _currentColor) {
-            _image.sprite = Resources.Load<Sprite>(_basePath +"HP"+ division.ToString() + "/" + newColor.ToString() + "/" + number.ToString());
+            _image.sprite = Resources.Load<Sprite>(_basePath + "HP" + division.ToString() + "/" + newColor.ToString() + "/" + number.ToString());
             _currentColor = newColor;
         }
     }

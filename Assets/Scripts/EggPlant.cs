@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
-public class EggPlant : MonoBehaviour
-{
+public class EggPlant : MonoBehaviour {
     [SerializeField]
     private float _jumpForce;
 
@@ -13,7 +11,7 @@ public class EggPlant : MonoBehaviour
     private float _groundedRadios = 2;
     [SerializeField]
     private Transform _groundedPosition;
-    
+
     [SerializeField]
     private LayerMask _playerMask, _groundMask;
     [SerializeField]
@@ -26,13 +24,12 @@ public class EggPlant : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
 
     private void Start() {
-        _rigidBody  = GetComponent<Rigidbody2D>();
+        _rigidBody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _coroutine = StartCoroutine(Rotate());
     }
 
-    void Update()
-    {
+    void Update() {
         if (_jumping) {
             Jumping();
         }
@@ -89,6 +86,6 @@ public class EggPlant : MonoBehaviour
             transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, degree);
             yield return new WaitForSeconds(_rotationSpeed);
         }
-        
+
     }
 }

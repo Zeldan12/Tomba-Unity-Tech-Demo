@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Apple : MonoBehaviour
-{
+public class Apple : MonoBehaviour {
     [SerializeField]
     private int _heal = 1;
 

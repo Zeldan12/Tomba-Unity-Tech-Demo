@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class TombaFallState : TombaAirbornBaseState {
+public class TombaFallState : TombaState {
     public TombaFallState(Tomba tomba) : base(tomba) {
     }
 
@@ -10,17 +7,20 @@ public class TombaFallState : TombaAirbornBaseState {
         return TombaStateType.Fall;
     }
 
-    public override void OnEnter(TombaState previousState) {
-        base.OnEnter(previousState);
-
+    public override void OnEnter() {
         _tomba.AnimatorController.Play("Jump-Apex");
     }
 
     public override void OnExit() {
-        base.OnExit();
     }
 
-    public override TombaStateType Update() {
-        return base.Update();
+    public override void Update() {
+    }
+
+    public override TombaStateType CheckStateChange() {
+        return TombaStateType.None;
+    }
+
+    public override void CameraBehaviour(CameraController cameraController) {
     }
 }

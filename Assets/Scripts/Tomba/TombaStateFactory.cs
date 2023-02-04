@@ -25,11 +25,13 @@ public enum TombaStateType {
     HitRecovery,
     StartFall,
     Push,
+    AttackCharge,
+    AttackRelease,
+    AttackPull,
     None
 }
 
-public class TombaStateFactory
-{
+public class TombaStateFactory {
     private readonly IEnumerable<Type> _stateTypes;
     private List<TombaState> _states;
     private Tomba _context;
@@ -44,10 +46,10 @@ public class TombaStateFactory
 
         foreach (var item in Enum.GetValues(typeof(TombaStateType)).Cast<TombaStateType>()) {
             TombaState state = Create(item);
-            if(state != null) {
+            if (state != null) {
                 _states.Add(state);
             }
-            
+
         }
     }
 
@@ -58,7 +60,7 @@ public class TombaStateFactory
     }
 
     private TombaState CreateSpecific(Type type, TombaStateType stateType) {
-        TombaState stateInstance = (TombaState)Activator.CreateInstance(type, args:_context); ;
+        TombaState stateInstance = (TombaState)Activator.CreateInstance(type, args: _context); ;
 
         return stateInstance.Type() == stateType ? stateInstance : null;
     }
@@ -67,6 +69,6 @@ public class TombaStateFactory
         foreach (var item in _states) {
             if (item.Type() == stateType) return item;
         }
-        throw new Exception("[TombaStateFactory]: State '"+ stateType.ToString() +"' Not Found");
+        throw new Exception("[TombaStateFactory]: State '" + stateType.ToString() + "' Not Found");
     }
 }

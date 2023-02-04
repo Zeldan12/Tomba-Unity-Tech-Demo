@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
-{
+public class CameraController : MonoBehaviour {
     [SerializeField]
     private Tomba _player;
     [SerializeField]
@@ -24,10 +20,9 @@ public class CameraController : MonoBehaviour
     public Camera Camera { get => _camera; }
     private Camera _camera;
 
-    void Start()
-    {
+    void Start() {
         _camera = GetComponent<Camera>();
-        
+
     }
 
     private void FixedUpdate() {

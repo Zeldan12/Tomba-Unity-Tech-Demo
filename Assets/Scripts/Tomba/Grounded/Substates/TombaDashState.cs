@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TombaDashState : TombaGroundedBaseState {
+public class TombaDashState : TombaState {
     public TombaDashState(Tomba tomba) : base(tomba) {
     }
 
@@ -10,8 +8,7 @@ public class TombaDashState : TombaGroundedBaseState {
         return TombaStateType.Dash;
     }
 
-    public override void OnEnter(TombaState previousState) {
-        base.OnEnter(previousState);
+    public override void OnEnter() {
         _tomba.AnimatorController.Play("Dash");
         _tomba.StartWalkSound();
         Quaternion rot = _tomba.transform.rotation;
@@ -20,16 +17,13 @@ public class TombaDashState : TombaGroundedBaseState {
     }
 
     public override void OnExit() {
-        _tomba.IsDashing = false;
+        //_tomba.IsDashing = false;
         _tomba.DashParticleSystem.Stop();
         _tomba.StopWalkSound();
     }
 
-    public override TombaStateType Update() {
-        if ((_tomba.HorizontalInput < 0 && _tomba.HorizontalSpeed > 0) || (_tomba.HorizontalInput > 0 && _tomba.HorizontalSpeed < 0)) {
-            _tomba.IsDashing = true;
-            return TombaStateType.Turn;
-        }
+    public override void Update() {
+
 
         //Conditions to accelerate
         if (((_tomba.HorizontalInput > 0 && _tomba.HorizontalSpeed >= 0) || (_tomba.HorizontalInput < 0 && _tomba.HorizontalSpeed <= 0))) {
@@ -50,24 +44,29 @@ public class TombaDashState : TombaGroundedBaseState {
 
         _tomba.RigidBody.velocity = new Vector2(_tomba.HorizontalSpeed, _tomba.RigidBody.velocity.y);
 
-        TombaStateType priorityState = base.Update();
+    }
 
-        if (priorityState != TombaStateType.None) {
-            _tomba.IsDashing = true;
-            return priorityState;
+    public override TombaStateType CheckStateChange() {
+        if ((_tomba.HorizontalInput < 0 && _tomba.HorizontalSpeed > 0) || (_tomba.HorizontalInput > 0 && _tomba.HorizontalSpeed < 0)) {
+            //_tomba.IsDashing = true;
+            return TombaStateType.Turn;
         }
         if (_tomba.HorizontalInput != 0 && _tomba.CheckPush()) {
             return TombaStateType.Push;
         }
         if (_tomba.HorizontalSpeed == 0) {
-            _tomba.IsDashing = false;
             return TombaStateType.Idle;
         }
         if (!_tomba.DashInput) {
-            _tomba.IsDashing = false;
-            return FindBestGroundedState(_tomba);
+            if (_tomba.HorizontalSpeed >= _tomba.MaxRunSpeed / 2) {
+                return TombaStateType.Run;
+            }
+            return TombaStateType.Walk;
         }
 
         return TombaStateType.None;
+    }
+
+    public override void CameraBehaviour(CameraController cameraController) {
     }
 }

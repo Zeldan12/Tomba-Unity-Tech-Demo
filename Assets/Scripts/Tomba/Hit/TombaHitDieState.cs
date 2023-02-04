@@ -9,7 +9,8 @@ public class TombaHitDieState : TombaState {
         return TombaStateType.HitDie;
     }
 
-    public override void OnEnter(TombaState previousState) {
+    public override void OnEnter() {
+        _tomba.AnimationEvent = false;
         _tomba.AnimatorController.Play("Hit-Die");
     }
 
@@ -17,7 +18,11 @@ public class TombaHitDieState : TombaState {
         _tomba.AnimationEvent = false;
     }
 
-    public override TombaStateType Update() {
+    public override void Update() {
+
+    }
+
+    public override TombaStateType CheckStateChange() {
         return TombaStateType.None;
     }
 }

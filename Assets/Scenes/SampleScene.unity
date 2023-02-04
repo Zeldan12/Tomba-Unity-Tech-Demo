@@ -1599,11 +1599,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5007539447096945499, guid: fb13405eb23964748826e2935532f095, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.47
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5007539447096945499, guid: fb13405eb23964748826e2935532f095, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 11.4
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 5007539447096945499, guid: fb13405eb23964748826e2935532f095, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1637,6 +1637,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5007539447096945501, guid: fb13405eb23964748826e2935532f095, type: 3}
+      propertyPath: _weapon
+      value: 
+      objectReference: {fileID: 7177691834592649436, guid: ea23a292c1e91a743abbd3ae0217d190, type: 3}
     - target: {fileID: 5007539447096945501, guid: fb13405eb23964748826e2935532f095, type: 3}
       propertyPath: _enemyMask
       value: 7
@@ -1708,6 +1712,14 @@ PrefabInstance:
     - target: {fileID: 8005214811832636199, guid: fb13405eb23964748826e2935532f095, type: 3}
       propertyPath: m_DeviceLostEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720129459946847936, guid: fb13405eb23964748826e2935532f095, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720129459946847936, guid: fb13405eb23964748826e2935532f095, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.08
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb13405eb23964748826e2935532f095, type: 3}

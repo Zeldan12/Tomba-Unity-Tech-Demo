@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 [System.Serializable]
-public class TombaIdleState : TombaGroundedBaseState
-{
+public class TombaIdleState : TombaState {
     public TombaIdleState(Tomba tomba) : base(tomba) {
     }
 
@@ -13,30 +9,26 @@ public class TombaIdleState : TombaGroundedBaseState
         return TombaStateType.Idle;
     }
 
-    public override void OnEnter(TombaState previousState) {
-        base.OnEnter(previousState);
+    public override void OnEnter() {
         _tomba.AnimatorController.Play("Stop");
     }
 
     public override void OnExit() {
     }
 
-    public override TombaStateType Update() {
-        PlayerInput playerInput = _tomba.PlayerInput;
-        float horizontalInput = playerInput.actions["HorizontalMove"].ReadValue<float>();
-
-        TombaStateType priorityState = base.Update();
-
-        if (priorityState == TombaStateType.None) {
-            if (horizontalInput != 0) {
-                if (_tomba.DashInput) {
-                    return TombaStateType.Dash;
-                }
-                return TombaStateType.Walk;
-            }
-        }
-
-        return priorityState;
+    public override void Update() {
     }
 
+    public override TombaStateType CheckStateChange() {
+        if (_tomba.HorizontalInput != 0) {
+            if (_tomba.DashInput) {
+                return TombaStateType.Dash;
+            }
+            return TombaStateType.Walk;
+        }
+        return TombaStateType.None;
+    }
+
+    public override void CameraBehaviour(CameraController cameraController) {
+    }
 }
